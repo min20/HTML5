@@ -222,6 +222,5 @@ if (navigator.mozGetUserMedia) {
 } else {
 	// Opera는 신경쓰지 않는다.
 	console.log('Browser does not appear to be WebRTC-capable');
-	util.appendClassName(document.getElementById("support"), "no");
 }
 
