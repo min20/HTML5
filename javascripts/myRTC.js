@@ -1,27 +1,24 @@
 /*
- *  adapter.js에서 RTC 관련 함수/변수들이 추상화되어 넘어왔다.
+ *  adapter.js에서 생성한 RTC 관련 함수/변수들을 사용한다.
  *  다음은 그 목록이다.
  *
  *      RTCPeerConnection     : 함수. peer와 peer를 연결해준다.
- *
  *      getUserMedia          : 함수. 사용자의 기기로부터 데이터를 받는다.
- *
  *      attachMediaStream     : 
- *
  *      reattachMediaStream   : 
- *
  *      webrtcDetectedBrowser : 현재 사용중인 브라우저 이름.
  *                              RTC를 지원하지 않으면 null이다.
- *
- *      webrtcDetectedVersion : 현재 사용중인 브라우저의 버젼.
+ *      webrtcDetectedVersion : 현재 사용중인 브라우저의 버젼 숫자.
  *
  */
+
 
 "use strict";
 
 var initialize = function() {
+	// exception 01. 웹 브라우저가 RTC를 지원하지 않는 경우
 	if (webrtcDetectedBrowser == null) {
-		// 브라우저가 RTC를 지원하지 않음을 사용자에게 알려준다.
+		// TODO 브라우저가 RTC를 지원하지 않음을 사용자에게 알려준다.
 		// UI 작업이 대부분일 것.
 		// 이후 다른 로직을 진행하지 않고 바로 종료되도록 한다.
 		objUtil.appendClassName(document.querySelector("#support"), "no");
@@ -29,11 +26,20 @@ var initialize = function() {
 		return ;
 	}
 
-	// Main
+	// TODO
+	// exception 02. 인터넷에 연결되지 않은 경우
+
+
+	// main
+	// TODO peerConnection 로직. 우선 objPeerConnection을 완성한다.
 }
 
 var objPeerConnection = {
+	eleRemoteVideo: document.querySelector("#remoteVideo"),
+	eleLocalVideo: document.querySelector("#localVideo"),
 
+	getConnection: function() {
+	}
 }
 
 var objUtil = {
@@ -75,6 +81,6 @@ var objUtil = {
 		// node.className에 replace 결과물을 대입합니다.
 		 node.className =
 				node.className.replace(" " + strClassName, "").toString();
-	}	
+	}
 }
 
