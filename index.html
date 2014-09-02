@@ -4,30 +4,43 @@
 <head>
 	<meta charset="UTF-8" />
 	<title>Hello, WebRTC!</title>
-	
+
 	<link rel="stylesheet" type="text/css" href="stylesheets/reset.css" />
 	<link rel="stylesheet" type="text/css" href="stylesheets/index.css" />
 </head>
 
 <body>
-<div id="wrapper">
-	<div id="support">
-		<h2>Your Browser does not support WebRTC</h2>
+	<div id="wrapper">
+		<div id="support">
+			<h2>Your Browser does not support WebRTC</h2>
+		</div>
+		<h1>hello, world!</h1>
+
+		<div id="remoteVideo"></div>
+		<div id="localVideo"></div>
+
 	</div>
-	<h1>hello, world!</h1>
 
-	<video id="remoteVideo" autoplay></video>
-	<video id="localVideo" autoplay></video>
+	<script src="javascripts/adapter.js"></script>
+	<script src="javascripts/simpleWebRTC.js"></script>
+	<script src="javascripts/myRTC.js"></script>
 
-</div>
+	<script>
+		initialize();
 
-<script src="javascripts/adapter.js"></script>
-<script src="javascripts/simpleWebRTC.js"></script>
-<script src="javascripts/myRTC.js"></script>
+		var webrtc = new SimpleWebRTC({
+			localVideoEl: "localVideo",
+			remoteVideosEl: "remoteVideo",
+			autoRequestMedia: true
+		});
 
-<script>
-	initialize();
-</script>
+		var chatRoomName = prompt("들어갈 방 이름?");
+
+		webrtc.on("readyToCall", function () {
+			webrtc.joinRoom(chatRoomName);
+		});
+
+	</script>
 
 </body>
 
