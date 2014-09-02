@@ -26,20 +26,6 @@ var initialize = function() {
 		return ;
 	}
 
-	// TODO
-	// exception 02. 인터넷에 연결되지 않은 경우
-
-
-	// main
-	// TODO peerConnection 로직. 우선 objPeerConnection을 완성한다.
-}
-
-var objPeerConnection = {
-	eleRemoteVideo: document.querySelector("#remoteVideo"),
-	eleLocalVideo: document.querySelector("#localVideo"),
-
-	getConnection: function() {
-	}
 }
 
 var objUtil = {
