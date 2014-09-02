@@ -18,27 +18,28 @@
 
 		<div id="remoteVideo"></div>
 		<div id="localVideo"></div>
-
 	</div>
 
-	<script src="javascripts/adapter.js"></script>
 	<script src="javascripts/simpleWebRTC.js"></script>
 	<script src="javascripts/myRTC.js"></script>
 
 	<script>
-		initialize();
+		if (objUtil.isBrowserSupport() === false) {
+			objUtil.appendClassName(
+					document.querySelector("#support"), "no");
+		} else {
+			var webrtc = new SimpleWebRTC({
+				localVideoEl: "localVideo",
+				remoteVideosEl: "remoteVideo",
+				autoRequestMedia: true
+			});
 
-		var webrtc = new SimpleWebRTC({
-			localVideoEl: "localVideo",
-			remoteVideosEl: "remoteVideo",
-			autoRequestMedia: true
-		});
+			var chatRoomName = prompt("들어갈 방 이름?");
 
-		var chatRoomName = prompt("들어갈 방 이름?");
-
-		webrtc.on("readyToCall", function () {
-			webrtc.joinRoom(chatRoomName);
-		});
+			webrtc.on("readyToCall", function () {
+				webrtc.joinRoom(chatRoomName);
+			});
+		}
 
 	</script>
 

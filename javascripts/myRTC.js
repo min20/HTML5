@@ -16,16 +16,6 @@
 "use strict";
 
 var initialize = function() {
-	// exception 01. 웹 브라우저가 RTC를 지원하지 않는 경우
-	if (webrtcDetectedBrowser == null) {
-		// TODO 브라우저가 RTC를 지원하지 않음을 사용자에게 알려준다.
-		// UI 작업이 대부분일 것.
-		// 이후 다른 로직을 진행하지 않고 바로 종료되도록 한다.
-		objUtil.appendClassName(document.querySelector("#support"), "no");
-
-		return ;
-	}
-
 }
 
 var objUtil = {
@@ -67,6 +57,17 @@ var objUtil = {
 		// node.className에 replace 결과물을 대입합니다.
 		 node.className =
 				node.className.replace(" " + strClassName, "").toString();
+	},
+
+	isBrowserSupport: function() {
+		// exception 01. 웹 브라우저가 RTC를 지원하지 않는 경우
+		if (typeof navigator.webkitGetUserMedia == "undefined" &&
+				typeof navigator.mozGetUserMedia == "undefined" &&
+				typeof navigator.getUserMedia == "undefined") {
+			return false;
+		}
+
+		return true;
 	}
 }
 
