@@ -9,6 +9,7 @@ function MyRTC() {
 
 		return ;
 	}
+	appendClassName(document.querySelector("#main"), "okay");
 
 	this.webrtc = new SimpleWebRTC({
 		localVideoEl: "localVideo",
@@ -16,11 +17,23 @@ function MyRTC() {
 		autoRequestMedia: true
 	});
 
-	this.chatRoomName = prompt("들어갈 방 이름?");
+	while (typeof this.strChatRoomName == "undefined"
+			|| this.strChatRoomName == null) {
+		// 방 이름 입력받는 로직
+		this.setChatRoomName(prompt("들어갈 방 이름?"));
+	}
 
 	this.webrtc.on("readyToCall", function () {
-		this.webrtc.joinRoom(this.chatRoomName);
+		this.webrtc.joinRoom(this.strChatRoomName);
 	}.bind(this));
+}
+
+MyRTC.prototype.setChatRoomName = function(strChatRoomName) {
+	this.strChatRoomName = strChatRoomName;
+}
+
+MyRTC.prototype.getChatRoomName = function() {
+	return this.strChatRoomName;
 }
 
 
