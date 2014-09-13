@@ -2176,7 +2176,7 @@
 						// getUserMedia Success Callback
 						t(null, e);
 						window.isSuccessGetUserMedia = true;
-						acceptGetUserMedia();
+						window.successGetUserMedia();
 					}, function(e) {
 						// getUserMedia Error Callback
 						var n;

@@ -1,3 +1,14 @@
+html, body {
+	position: relative;
+	height: 100%;
+}
+
+body>* {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
 h1 {
 	font-size: 100px;
 }
@@ -10,15 +21,29 @@ h1 {
 	display: block;
 }
 
-#requestPermission.pass {
+#inputRoomName.done {
 	display: none;
 }
 
-#main {
+#call {
 	display: none;
 }
 
-#main.do {
+#call.on {
 	display: block;
 }
+
+video {
+	position: absolute;
+}
+
+video {
+	height: 100%;
+
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
+
 

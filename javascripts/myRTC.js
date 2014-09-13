@@ -5,6 +5,7 @@
  *    string getStyle(eleNode, strStyle)
  *    void appendClassName(eleNode, strClassName)
  *    void removeClassName(eleNode, strClassName)
+ *    string getBrowserPrefix()
  **************************************************/
 var utils = {
 	getStyle: function(eleNode, strStyle) {
@@ -12,6 +13,16 @@ var utils = {
 	},
 
 	appendClassName: function(eleNode, strClassName) {
+		if (eleNode == null) {
+			console.log("appendClassName: Target node not found");
+			return ;
+		}
+		if (typeof strClassName == "undefined"
+				|| strClassName == null) {
+			console.log("appendClassName: Missing className to append");
+			return ;
+		}
+
 		// 기존에 className가 없던 경우
 		if (eleNode.className === "") {
 			eleNode.className = strClassName;
@@ -28,6 +39,17 @@ var utils = {
 	},
 
 	removeClassName: function(eleNode, strClassName) {
+		if (eleNode == null) {
+			console.log("removeClassName: Target node not found");
+			return ;
+		}
+
+		if (typeof strClassName == "undefined"
+				|| strClassName == null) {
+			console.log("removeClassName: Missing className to remove");
+			return ;
+		}
+
 		// 기존에 className가 없는 경우 함수를 종료합니다
 		if (eleNode.className === "") {
 			return ;
@@ -43,8 +65,21 @@ var utils = {
 		// eleNode.className에 replace 결과물을 대입합니다.
 		eleNode.className =
 			eleNode.className.replace(" " + strClassName, "").toString();
-	}
+	},
 
+	getBrowserPrefix: function() {
+		if (typeof document.body.style.webkitTransition !== "undefined") {
+			return "webkit";
+		} else if (typeof document.body.style.msTransition !== "undefined") {
+			return "ms";
+		} else if (typeof document.body.style.MozTransition !== "undefined") {
+			return "moz";
+		} else if (typeof document.body.style.oTransition !== "undefined") {
+			return "o";
+		} else {
+			return "";
+		}
+	},
 };
 
 
@@ -56,36 +91,26 @@ var isSuccessGetUserMedia;
 
 function MyRTC() {
 	this.webrtc;
-	this.elePermissionButton =
-			document.querySelector("#requestPermission button");
-	this.eleInputChatRoomName =
-			document.querySelector("input[name=chatRoomName]");
-	this.eleJoinButton = document.querySelector("#chatRoomName button");
-	this.chatRoomName;
+	this.strBrowserPrefix;
+	this.eleInputRoomName =
+			document.querySelector("input[name=roomName]");
+	this.eleJoinButton = document.querySelector("#inputRoomName button");
 
 	this._init();
-
-/*
-	eleJoinButton.addEventListener("click", function() {
-		getChatRoomName()
-	}.bind(this));
-
-	var getChatRoomName = function(strChatRoomName) {
-		this.webrtc.on("readyToCall", function () {
-			this.webrtc.joinRoom(eleInputChatRoomName.value);
-		}.bind(this));
-	}
-*/
 }
 
 MyRTC.prototype = {
 	_init: function() {
 		if (this._checkBrowserSupport() === false) {
 			var eleNotSupport = document.querySelector("#notSupport");
+
+			utils.appendClassName(this.eleInputRoomName, "done");
 			utils.appendClassName(eleNotSupport, "yes");
 
 			return ;
 		}
+
+		this.strBrowserPrefix = utils.getBrowserPrefix();
 
 		this.webrtc = new SimpleWebRTC({
 			localVideoEl: "localVideo",
@@ -97,13 +122,12 @@ MyRTC.prototype = {
 	},
 
 	_initEvents: function() {
-		this.elePermissionButton.addEventListener("click", function() {
-			this.webrtc.startLocalVideo();
-		}.bind(this));
-
 		this.eleJoinButton.addEventListener("click", function() {
-			this.chatRoomName = this.eleInputChatRoomName.value;
-			console.log("chatRoomName: " + this.chatRoomName);
+			console.log("chatRoomName: " + this.eleInputRoomName.value);
+			this.webrtc.on("readyToCall", function () {
+				this.webrtc.joinRoom(this.eleInputRoomName.value);
+			}.bind(this));
+			this.webrtc.startLocalVideo();
 		}.bind(this));
 	},
 
@@ -119,14 +143,13 @@ MyRTC.prototype = {
 
 };
 
-function acceptGetUserMedia() {
+function successGetUserMedia() {
 	if (typeof isSuccessGetUserMedia == "undefined"
 			|| isSuccessGetUserMedia == false) {
 		return;
 	}
 
-	utils.appendClassName(document.querySelector("#requestPermission"), "pass");
-	utils.appendClassName(document.querySelector("#main"), "do");
+	utils.appendClassName(document.querySelector("#inputRoomName"), "done");
+	utils.appendClassName(document.querySelector("#call"), "on");
 }
-
 
