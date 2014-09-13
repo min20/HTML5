@@ -2172,14 +2172,18 @@
 						s = "PermissionDeniedError",
 						a = "ConstraintNotSatisfiedError";
 					return i || (t = e, e = r), n ? (n.call(window.navigator, e, function(e) {
-						t(null, e)
-					}, function(e) {
-						var n;
-						"string" == typeof e ? (n = new Error("MediaStreamError"), n.name = e === s ? s : a) : (n = e, n.name || (e.name = n[s] ? s : a)), t(n)
-
 						// 2014.09.11
-						// DO ERROR LOGIC
-						console.log(e);
+						// getUserMedia Success Callback
+						t(null, e);
+						window.isSuccessGetUserMedia = true;
+						acceptGetUserMedia();
+					}, function(e) {
+						// getUserMedia Error Callback
+						var n;
+						"string" == typeof e ? (n = new Error("MediaStreamError"), n.name = e === s ? s : a) : (n = e, n.name || (e.name = n[s] ? s : a)), t(n);
+
+						// LOGIC
+						window.isSuccessGetUserMedia = false;
 					}), void 0) : (o = new Error("MediaStreamError"), o.name = "NotSupportedError", t(o))
 				}
 			}, {}

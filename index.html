@@ -1,43 +1,43 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-	<meta charset="UTF-8" />
-	<title>Hello, WebRTC!</title>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Hello, WebRTC!</title>
 
-	<link rel="stylesheet" type="text/css" href="stylesheets/reset.css" />
-	<link rel="stylesheet" type="text/css" href="stylesheets/index.css" />
-</head>
+		<link rel="stylesheet" type="text/css" href="css/reset.css" />
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+	</head>
 
-<body>
-	<div id="support">
-		<h2>Your Browser does not support WebRTC</h2>
-		<p>Try again with latest version of Chrmoe, Firefox or Opera</p>
-	</div>
-
-	<div id="permission">
-		<h2>Use My Camera</h2>
-		<p></p>
-	</div>
-
-	<div id="main">
-		<div>
-			<input type="text" name="chatRoomName"
-					placeholder="Name the Conversation"></input>
-			<button>Call</button>
+	<body>
+		<div id="notSupport">
+			<h2>Your Browser does not support WebRTC</h2>
+			<p>Try again with latest version of Chrmoe, Firefox or Opera</p>
 		</div>
-		<div id="localVideo"></div>
-		<div id="remoteVideo"></div>
-	</div>
 
-	<script src="javascripts/simpleWebRTC.js"></script>
-	<script src="javascripts/myRTC.js"></script>
+		<div id="requestPermission">
+			<button>Use My Camera</button>
+		</div>
 
-	<script>
-		var myRTC = new MyRTC();
-	</script>
+		<div id="main">
+			<div id="chatRoomName">
+				<input type="text" name="chatRoomName" placeholder="Name the Conversation"></input>
+				<button>Call</button>
+			</div>
 
-</body>
+			<div id="localVideo"></div>
+			<!-- video tag is automatically added -->
+			<div id="remoteVideos"></div>
+		</div>
+
+		<script src="javascripts/SimpleWebRTC.js"></script>
+		<script src="javascripts/MyRTC.js"></script>
+
+		<script>
+			var myRTC = new MyRTC();
+		</script>
+
+	</body>
 
 </html>
 
