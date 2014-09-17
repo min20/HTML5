@@ -333,7 +333,12 @@
 						if (!s.mozSrcObject) return !1;
 						s.mozSrcObject = e
 					}
-					return s
+					// 2014.09.13
+					// video 생성 후 옵션, mediaStream 넣는 곳(으로 추정)
+					// 이 Scope에서는 변수 s가 video element(로 추정)
+					console.log("localVideo created!");
+
+					return s;
 				}
 			}, {}
 		],
@@ -2175,15 +2180,13 @@
 						// 2014.09.11
 						// getUserMedia Success Callback
 						t(null, e);
-						window.isSuccessGetUserMedia = true;
-						window.successGetUserMedia();
 					}, function(e) {
 						// getUserMedia Error Callback
 						var n;
 						"string" == typeof e ? (n = new Error("MediaStreamError"), n.name = e === s ? s : a) : (n = e, n.name || (e.name = n[s] ? s : a)), t(n);
 
 						// LOGIC
-						window.isSuccessGetUserMedia = false;
+						window.errorGetUserMedia();
 					}), void 0) : (o = new Error("MediaStreamError"), o.name = "NotSupportedError", t(o))
 				}
 			}, {}

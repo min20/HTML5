@@ -38,6 +38,28 @@ var utils = {
 		eleNode.className += " " + strClassName;
 	},
 
+	hasClassName: function(eleNode, strClassName) {
+		if (eleNode == null) {
+			console.log("Target node not found");
+			return false;
+		}
+
+		if (typeof strClassName == "undefined"
+				|| strClassName == null) {
+			console.log("Missing className to search");
+			return false;
+		}
+
+		// 기존에 className가 없는 경우 함수를 종료합니다
+		if (eleNode.className === "") {
+			return false;
+		}
+
+		if (eleNode.className.toString().search(strClassName) !== -1) {
+			return true;
+		}
+	},
+
 	removeClassName: function(eleNode, strClassName) {
 		if (eleNode == null) {
 			console.log("removeClassName: Target node not found");
@@ -91,10 +113,20 @@ var isSuccessGetUserMedia;
 
 function MyRTC() {
 	this.webrtc;
-	this.strBrowserPrefix;
-	this.eleInputRoomName =
-			document.querySelector("input[name=roomName]");
-	this.eleJoinButton = document.querySelector("#inputRoomName button");
+	this.strAnimationEnd;
+
+	// #notSupport
+	this.eleSupport = document.querySelector("#support");
+
+	// #inputRoomName *
+	this.eleRoomName = document.querySelector("#roomName");
+	this.eleJoinButton = this.eleRoomName.querySelector("button");
+
+	this.strRoomName;
+
+	// #call, #call *
+	this.eleCall = document.querySelector("#call");
+	this.eleEndButton = document.querySelector("#call button");
 
 	this._init();
 }
@@ -102,15 +134,11 @@ function MyRTC() {
 MyRTC.prototype = {
 	_init: function() {
 		if (this._checkBrowserSupport() === false) {
-			var eleNotSupport = document.querySelector("#notSupport");
-
-			utils.appendClassName(this.eleInputRoomName, "done");
-			utils.appendClassName(eleNotSupport, "yes");
+			utils.appendClassName(this.eleRoomName, "done");
+			utils.appendClassName(this.eleSupport, "no");
 
 			return ;
 		}
-
-		this.strBrowserPrefix = utils.getBrowserPrefix();
 
 		this.webrtc = new SimpleWebRTC({
 			localVideoEl: "localVideo",
@@ -118,16 +146,51 @@ MyRTC.prototype = {
 			autoRequestMedia: false
 		});
 
+		this.strAnimationEnd = this._getAnimationEndWithPrefix();
+
 		this._initEvents();
 	},
 
 	_initEvents: function() {
 		this.eleJoinButton.addEventListener("click", function() {
-			console.log("chatRoomName: " + this.eleInputRoomName.value);
+			var isInit = false;
+			if (typeof this.strRoomName == "undefined") {
+				isInit = true;
+			}
+
+			this.strRoomName =
+					this.eleRoomName.querySelector("input[name=roomName]")
+					.value;
+			console.log("chatRoomName: " + this.strRoomName);
+
 			this.webrtc.on("readyToCall", function () {
-				this.webrtc.joinRoom(this.eleInputRoomName.value);
+				this.webrtc.joinRoom(this.strRoomName);
 			}.bind(this));
-			this.webrtc.startLocalVideo();
+
+			if (isInit) {
+				this.webrtc.startLocalVideo();
+				utils.appendClassName(this.eleCall, "init");
+			} else {
+				utils.removeClassName(this.eleCall, "disconnected");
+				utils.appendClassName(this.eleCall, "waiting");
+			}
+
+			utils.appendClassName(this.eleRoomName, "done");
+
+		}.bind(this));
+
+		this.eleCall.addEventListener(this.strAnimationEnd, function() {
+			utils.removeClassName(this.eleCall, "init");
+			utils.appendClassName(this.eleCall, "waiting");
+		}.bind(this));
+
+		this.eleEndButton.addEventListener("click", function() {
+			this.webrtc.leaveRoom();
+			utils.removeClassName(this.eleRoomName, "done");
+			utils.removeClassName(this.eleCall,
+					utils.hasClassName(this.eleCall, "waiting") ?
+						"waiting" : "connected");
+			utils.appendClassName(this.eleCall, "disconnected");
 		}.bind(this));
 	},
 
@@ -139,17 +202,19 @@ MyRTC.prototype = {
 		}
 
 		return true;
-	}
+	},
 
+	_getAnimationEndWithPrefix: function() {
+		var strAnimationEnd = "AnimationEnd";
+		var strBrowserPrefix = utils.getBrowserPrefix();
+
+		return strBrowserPrefix === "" ?
+			strAnimationEnd.toLower() : strBrowserPrefix + strAnimationEnd;
+	}
 };
 
-function successGetUserMedia() {
-	if (typeof isSuccessGetUserMedia == "undefined"
-			|| isSuccessGetUserMedia == false) {
-		return;
-	}
-
-	utils.appendClassName(document.querySelector("#inputRoomName"), "done");
-	utils.appendClassName(document.querySelector("#call"), "on");
+function errorGetUserMedia() {
+	console.log("getUserMedia() 실패");
+	// TODO 권한에 대해 알려주는 UI 만들기
 }
 

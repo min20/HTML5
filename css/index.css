@@ -13,15 +13,23 @@ h1 {
 	font-size: 100px;
 }
 
-#notSupport {
+#support {
 	display: none;
 }
 
-#notSupport.yes {
+#support.no {
 	display: block;
 }
 
-#inputRoomName.done {
+#roomName {
+	position: absolute;
+
+	left: 50%;
+
+	z-index: 1000;
+}
+
+#roomName.done {
 	display: none;
 }
 
@@ -29,21 +37,85 @@ h1 {
 	display: none;
 }
 
-#call.on {
+#call.init,
+#call.disconnected,
+#call.waiting,
+#call.connected {
 	display: block;
 }
 
-video {
+#call video {
 	position: absolute;
-}
-
-video {
 	height: 100%;
-
-	-webkit-transition: all 0.3s ease-in-out;
-	-moz-transition: all 0.3s ease-in-out;
-	-o-transition: all 0.3s ease-in-out;
-	transition: all 0.3s ease-in-out;
 }
 
+#call.init video {
+	animation: initLocalVideo;
+	animation-duration: 3s;
+	animation-timing-function: ease-in;
+	animation-fill-mode: forwards;
+
+	-webkit-animation: initLocalVideo;
+	-webkit-animation-duration: 3s;
+	-webkit-animation-timing-function: ease-in;
+	-webkit-animation-fill-mode: forwards;
+
+	-moz-animation: initLocalVideo;
+	-moz-animation-duration: 3s;
+	-moz-animation-timing-function: ease-in;
+	-moz-animation-fill-mode: forwards;
+}
+
+@keyframes initLocalVideo {
+	  0% { filter: blur(80px) opacity( 0%); }
+	 66% { filter: blur(80px) opacity( 0%); }
+	100% { filter: blur(20px) opacity(50%); }
+}
+
+@-webkit-keyframes initLocalVideo {
+	  0% { -webkit-filter: blur(80px) opacity( 0%); }
+	 66% { -webkit-filter: blur(80px) opacity( 0%); }
+	100% { -webkit-filter: blur(20px) opacity(50%); }
+}
+
+@-moz-keyframes initLocalVideo {
+	  0% { -moz-filter: blur(80px) opacity( 0%); }
+	 66% { -moz-filter: blur(80px) opacity( 0%); }
+	100% { -moz-filter: blur(20px) opacity(50%); }
+}
+
+#call.disconnected video,
+#call.waiting video,
+#call.connected video {
+	-webkit-transition: all 1s -webkit-transform;
+	   -moz-transition: all 1s transform;
+	        transition: all 1s transform;
+}
+
+#call.disconnected video,
+#call.waiting video {
+	        filter: blur(20px) opacity(50%);
+	-webkit-filter: blur(20px) opacity(50%);
+	   -moz-filter: blur(20px) opacity(50%);
+}
+
+#call.connected video {
+	        filter: blur(0px) opacity(100%);
+	-webkit-filter: blur(0px) opacity(100%);
+	   -moz-filter: blur(0px) opacity(100%);
+}
+
+#call button {
+	display: none;
+
+	position: absolute;
+	left: 50%;
+
+	z-index: 1000;
+}
+
+#call.waiting button,
+#call.connected button {
+	display: block;
+}
 
