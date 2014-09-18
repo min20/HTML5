@@ -161,9 +161,11 @@
 						})
 					}, 250)
 				}, n.prototype.handlePeerStreamRemoved = function(e) {
+					// 2014.09.18
 					var t = this.getRemoteVideoContainer(),
 						n = e.videoEl;
 					this.config.autoRemoveVideos && t && n && t.removeChild(n), n && this.emit("videoRemoved", n, e)
+					
 				}, n.prototype.getDomId = function(e) {
 					return [e.id, e.type, e.broadcaster ? "broadcasting" : "incoming"].join("_")
 				}, n.prototype.setVolumeForAll = function(e) {
@@ -324,19 +326,28 @@
 						s = t || document.createElement("video");
 					if (n)
 						for (o in n) r[o] = n[o];
-					if (r.autoplay && (s.autoplay = "autoplay"), r.muted && (s.muted = !0), r.mirror && ["", "moz", "webkit", "o", "ms"].forEach(function(e) {
-						var t = e ? e + "Transform" : "transform";
-						s.style[t] = "scaleX(-1)"
-					}), i && i.createObjectURL) s.src = i.createObjectURL(e);
+					// 2014.09.13
+					if (r.autoplay && (s.autoplay = "autoplay"),
+							r.muted && (s.muted = !0),
+							r.mirror && ["", "moz", "webkit", "o", "ms"].forEach(function(e) {
+								var t = e ? e + "Transform" : "transform";
+								s.style[t] = "scaleX(-1)"}),
+							i && i.createObjectURL) {
+						if (r.mirror) {
+							// Create localVideo
+							console.log("localVideo created!");
+						} else {
+							// Create remoteVideo
+							console.log("remoteVideo created!");
+							window.isConnected = true;
+						}
+						s.src = i.createObjectURL(e);
+					}
 					else if (s.srcObject) s.srcObject = e;
 					else {
 						if (!s.mozSrcObject) return !1;
 						s.mozSrcObject = e
 					}
-					// 2014.09.13
-					// video 생성 후 옵션, mediaStream 넣는 곳(으로 추정)
-					// 이 Scope에서는 변수 s가 video element(로 추정)
-					console.log("localVideo created!");
 
 					return s;
 				}

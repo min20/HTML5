@@ -10,20 +10,22 @@
 	</head>
 
 	<body>
-		<div id="support">
-			<h2>Your Browser does not support WebRTC</h2>
-			<p>Try again with latest version of Chrmoe, Firefox or Opera</p>
-		</div>
+		<div id="wrapper">
+			<div id="support">
+				<h2>Your Browser does not support WebRTC</h2>
+				<p>Try again with latest version of Chrmoe, Firefox or Opera</p>
+			</div>
 
-		<div id="roomName">
-			<input type="text" name="roomName" placeholder="Name the Conversation"></input>
-			<button>Call</button>
-		</div>
+			<div id="roomName">
+				<input type="text" name="roomName" placeholder="Name the Conversation"></input>
+				<button>Go</button>
+			</div>
 
-		<div id="call">
-			<div id="localVideo"></div>
-			<div id="remoteVideos"></div>
-			<button>End Call</button>
+			<div id="call">
+				<div id="localVideo"></div>
+				<div id="remoteVideos"></div>
+				<button>End</button>
+			</div>
 		</div>
 
 		<script src="javascripts/SimpleWebRTC.js"></script>

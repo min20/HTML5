@@ -1,5 +1,7 @@
 "use strict";
 
+var isConnected = false;
+
 /**************************************************
  * UTILITIES
  *    string getStyle(eleNode, strStyle)
@@ -158,38 +160,43 @@ MyRTC.prototype = {
 				isInit = true;
 			}
 
-			this.strRoomName =
-					this.eleRoomName.querySelector("input[name=roomName]")
-					.value;
-			console.log("chatRoomName: " + this.strRoomName);
+			if (utils.hasClassName(this.eleCall, "disconnected")) {
+				utils.removeClassName(this.eleCall, "disconnected");
+				utils.appendClassName(this.eleCall, "wait");
+			}
 
-			this.webrtc.on("readyToCall", function () {
-				this.webrtc.joinRoom(this.strRoomName);
-			}.bind(this));
+			this.strRoomName = this.eleRoomName.querySelector("input[name=roomName]").value;
 
 			if (isInit) {
+				this.webrtc.on("readyToCall", function () {
+					this.webrtc.joinRoom(this.strRoomName);
+				}.bind(this));
+
 				this.webrtc.startLocalVideo();
 				utils.appendClassName(this.eleCall, "init");
 			} else {
-				utils.removeClassName(this.eleCall, "disconnected");
-				utils.appendClassName(this.eleCall, "waiting");
+				this.webrtc.joinRoom(this.strRoomName);
 			}
 
 			utils.appendClassName(this.eleRoomName, "done");
-
 		}.bind(this));
 
 		this.eleCall.addEventListener(this.strAnimationEnd, function() {
 			utils.removeClassName(this.eleCall, "init");
-			utils.appendClassName(this.eleCall, "waiting");
+			if (isConnected) {
+				utils.appendClassName(this.eleCall, "connected");
+
+				return ;
+			}
+
+			utils.appendClassName(this.eleCall, "wait");
 		}.bind(this));
 
 		this.eleEndButton.addEventListener("click", function() {
 			this.webrtc.leaveRoom();
 			utils.removeClassName(this.eleRoomName, "done");
-			utils.removeClassName(this.eleCall,
-					utils.hasClassName(this.eleCall, "waiting") ?
-						"waiting" : "connected");
+			utils.removeClassName(this.eleCall, "connected");
+			utils.removeClassName(this.eleCall, "wait");
 			utils.appendClassName(this.eleCall, "disconnected");
 		}.bind(this));
 	},
@@ -217,4 +224,21 @@ function errorGetUserMedia() {
 	console.log("getUserMedia() 실패");
 	// TODO 권한에 대해 알려주는 UI 만들기
 }
+
+function _isAlone() {
+	var numRemoteViedos = document.querySelectorAll("#remoteVideos *").length;
+	if (numRemoteViedos <= 0) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function checkDisconnection() {
+	if (!_isAlone()) {
+		return ;
+	}
+
+}
+
 
